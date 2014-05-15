@@ -27,8 +27,7 @@ class CoreCommercePurchaseListsPurchases extends Object {
 		  	 	left join CoreCommerceProductOptionAttributeValues as ccpoav on ccp.orderProductID = ccpoav.orderProductID
 		  	 	left join AttributeKeys on ccpoav.akID = AttributeKeys.aKID
 		  	 	where productID = ? and oStatus ' . $successstatuses . ' order by ak_billing_last_name, ak_billing_first_name';
-		  	 	
-		
+		 
 		$result = $db->Execute($sql, array($id));
 		
 		$orderProductID  = '';
@@ -43,17 +42,19 @@ class CoreCommercePurchaseListsPurchases extends Object {
 					$row['OptionValues'][] = $av->getValue();
 				}
 				
-				$userlist[$row['orderProductID']] = $row;		
+				$userlist[$row['orderID']] = $row;		
 			} else {
 				$av = AttributeValue::getByID($row['avID']);
-				$userlist[$row['orderProductID']]['OptionValues'][] = $av->getValue();
+				$userlist[$row['orderID']]['OptionValues'][] = $av->getValue();
 
 			}
 			
-			$orderProductID = $row['orderProductID'];	 	
+			$orderProductID = $row['orderID'];	 	
 		}
-		
+ 
 		return $userlist;
+		
+		
 	}	
 	
 	public function getProductName($id = null) {
