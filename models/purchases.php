@@ -19,21 +19,25 @@ class CoreCommercePurchaseListsPurchases extends Object {
 		
 		$db = Loader::db();
 		
-		$sql = 'select cco.oDateAdded, ccpoav.orderProductID, ccpoav.akID, avID, ccosia.*, oEmail, ccp.quantity, ccoin.orderInvoiceNumber
+		$sql = 'select cco.oDateAdded, ccp.orderProductID, ccpoav.akID, avID, ccosia.*, oEmail, ccp.quantity, ccoin.orderInvoiceNumber
 		  	 	from CoreCommerceOrderProducts as ccp 
 		  	 	left join CoreCommerceOrders as cco  on  ccp.orderID = cco.orderID
 		  	 	left join CoreCommerceOrderInvoiceNumbers as ccoin on cco.orderID = ccoin.orderID
 		  	 	left join CoreCommerceOrderSearchIndexAttributes as ccosia on cco.orderID = ccosia.orderID
 		  	 	left join CoreCommerceProductOptionAttributeValues as ccpoav on ccp.orderProductID = ccpoav.orderProductID
 		  	 	left join AttributeKeys on ccpoav.akID = AttributeKeys.aKID
-		  	 	where productID = ? and oStatus ' . $successstatuses . ' order by ak_billing_last_name, ak_billing_first_name';
+		  	 	where productID = ? and oStatus ' . $successstatuses . '
+		  	 	 
+		  	 	order by ak_billing_last_name, ak_billing_first_name, oDateAdded';
+		 
+		//echo $sql; 
 		 
 		$result = $db->Execute($sql, array($id));
 		
 		$orderProductID  = '';
 		
 		while($row = $result->fetchRow()) {
-			if ($orderProductID != $row['orderID']) {
+			if ($orderProductID != $row['orderProductID']) {
 				
 				$row['OptionValues'] = array();
 				
@@ -42,14 +46,14 @@ class CoreCommercePurchaseListsPurchases extends Object {
 					$row['OptionValues'][] = $av->getValue();
 				}
 				
-				$userlist[$row['orderID']] = $row;		
+				$userlist[$row['orderProductID']] = $row;		
 			} else {
 				$av = AttributeValue::getByID($row['avID']);
-				$userlist[$row['orderID']]['OptionValues'][] = $av->getValue();
+				$userlist[$row['orderProductID']]['OptionValues'][] = $av->getValue();
 
 			}
 			
-			$orderProductID = $row['orderID'];	 	
+			$orderProductID = $row['orderProductID'];	 	
 		}
  
 		return $userlist;

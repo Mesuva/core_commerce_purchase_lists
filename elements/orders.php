@@ -19,7 +19,7 @@
 		<td><?php echo $o['ak_billing_last_name']; ?></td>
 		<td><?php echo $o['ak_billing_first_name']; ?></td>
 		<td><?php echo $o['quantity']; $totalquantity += $o['quantity'] ?></td>
-		<td><?php echo implode(',', $o['OptionValues']); ?></td>
+		<td><?php echo implode(', ', $o['OptionValues']); ?></td>
 		<td><a href="mailto:<?php echo $o['oEmail']; ?>"><?php echo $o['oEmail']; ?></a></td>
 		
 		<?php if ($this) { ?>
